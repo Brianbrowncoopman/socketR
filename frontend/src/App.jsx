@@ -10,7 +10,7 @@ import { Container, Divider, Card, Icon, CardContent, Form, FormField, Button } 
 const SOCKET_SERVER_URL = "https://socketr.onrender.com";
 
 
-const socket = io.connect("http://localhost:3001");
+const socket = io.connect("https://socketr.onrender.com");
 
 function App() {
   const [username, setUsername] = useState("");
