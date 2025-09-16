@@ -3,7 +3,7 @@ import { Container, Divider, Card, Icon, CardContent, Form, FormField, Button, I
 import { Message } from 'semantic-ui-react'
 import ScrollToBottom from 'react-scroll-to-bottom';
 
-const chat = ({socket, username, room}) => {
+const Chat = ({socket, username, room}) => {
 
     const [currentMessage, setCurrentMessage] = React.useState("");
     const [messageList, setMessageList] = React.useState([]);
@@ -119,4 +119,4 @@ const chat = ({socket, username, room}) => {
     )
 }
 
-export default chat
+export default Chat

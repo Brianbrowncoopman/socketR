@@ -2,7 +2,7 @@
 import './App.css'
 import { useState } from 'react';
 import io from 'socket.io-client';
-import Chat from './src/Chat.jsx';
+import Chat from './chat.jsx';
 
 import { Container, Divider, Card, Icon, CardContent, Form, FormField, Button } from "semantic-ui-react";
 
