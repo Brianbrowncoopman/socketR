@@ -1,0 +1,17 @@
+# Ignorar node_modules en backend y frontend
+/backend/node_modules/
+/frontend/node_modules/
+
+# Ignorar archivos de logs
+*.log
+
+# Ignorar carpetas de build o dist si usas
+/frontend/build/
+/backend/dist/
+
+# Ignorar archivos de entorno (variables privadas)
+*.env
+
+# Ignorar archivos temporales y de sistema
+.DS_Store
+Thumbs.db
