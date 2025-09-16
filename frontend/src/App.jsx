@@ -7,10 +7,16 @@ import Chat from './Chat.jsx';
 import { Container, Divider, Card, Icon, CardContent, Form, FormField, Button } from "semantic-ui-react";
 
 // Cambia esta URL por la pública de tu backend en Render
-const SOCKET_SERVER_URL = "https://socketr.onrender.com";
+//const SOCKET_SERVER_URL = "https://socketr.onrender.com";
 
 
-const socket = io.connect("https://socketr.onrender.com");
+//const socket = io.connect("https://socketr.onrender.com");
+//const socket = io.connect("http://localhost:3001");
+const SOCKET_SERVER_URL = import.meta.env.PROD
+  ? "https://socketr.onrender.com"
+  : "http://localhost:3001";
+
+const socket = io.connect(SOCKET_SERVER_URL);
 
 function App() {
   const [username, setUsername] = useState("");
@@ -19,7 +25,7 @@ function App() {
 
   const joinRoom = () => {
     if(username !== "" && room !== ""){
-      socket.emit("join_room", room);
+      socket.emit("join_room", { room, username  });
       setShowChat(true);
       
     }
