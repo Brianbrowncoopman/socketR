@@ -6,6 +6,10 @@ import Chat from './chat';
 
 import { Container, Divider, Card, Icon, CardContent, Form, FormField, Button } from "semantic-ui-react";
 
+// Cambia esta URL por la pública de tu backend en Render
+const SOCKET_SERVER_URL = "https://socketr.onrender.com";
+
+
 const socket = io.connect("http://localhost:3001");
 
 function App() {
