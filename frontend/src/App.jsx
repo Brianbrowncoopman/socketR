@@ -27,31 +27,44 @@ function App() {
   return (
     <Container style={{ height: '100vh', display: 'flex', justifyContent: 'center', alignItems:'center' }}>
       { !showChat ? (
-        <Card fluid style={{ width: '400px' }}>
+        <Card fluid style={{ width: '400px' , backgroundColor:"#EBE4E4", border:"1.5px solid #994949ff", borderRadius:"12.5px", textAlign:"center", justifyContent: 'center' }}>
           <CardContent header='Unirme al chat' />
           <CardContent>
             <Form>
               <FormField>
-                <label>Username:</label>
+                <label>NOMBRE DE USUARIO:</label>
+                
                 <input
                   type="text" 
                   placeholder='Brian 123...' 
                   onChange={(e) => setUsername(e.target.value)} 
-                /> 
+                  input={{
+                  style: {
+                    backgroundColor: "#E0D3D3",
+                    borderRadius: "12.5px"  // aquí defines el fondo del input real
+                  }
+                }}
+                  />
               </FormField>
               <FormField>
-                <label>Room:</label>
+                <label>SALA:</label>
                 <input 
                   type="text" 
                   placeholder='ID sala...:' 
                   onChange={(e) => setRoom(e.target.value)} 
+                  input={{
+                  style: {
+                    backgroundColor: "#E0D3D3",
+                    borderRadius: "12.5px"  // aquí defines el fondo del input real
+                  }
+                }}
                 />
               </FormField>
               <Button onClick={joinRoom} fluid color='teal'>Unirme</Button>
             </Form>
           </CardContent>
           <CardContent extra>
-            <Icon name='user' />4 Friends
+            <Icon name='user' /> {/* ICONO DE USUARIO*/}
           </CardContent>
         </Card>
       ) : (

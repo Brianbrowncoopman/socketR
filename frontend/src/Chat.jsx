@@ -67,17 +67,19 @@ const Chat = ({ socket, username, room }) => {
   }, [messageList, typingUsers]);
 
   return (
-    <Container fluid style={{ display: 'flex', height: '80vh' }}>
-      <Card style={{ width: '250px', marginRight: '10px', overflowY: 'auto', height: '100%' }}>
-        <CardContent>
-          <b>Usuarios conectados</b>
+    <Container fluid style={{ display: 'flex', height: '80vh', backgroundColor: "#E0D3D3" }}>
+      
+      <Card fluid style={{ width: '200px', marginTop:"14px",marginRight: '10px', overflowY: 'auto', height: '100%', textAlign:"center", justifyContent: 'center', backgroundColor:"#EBE4E4", border:"1.5px solid #994949ff", borderRadius:"12.5px" }}> 
+        <CardContent >
+          <b >Usuarios conectados</b>
           <Divider />
           <ul style={{ listStyle: 'none', paddingLeft: 0 }}>
             {users.map(user => (
               <li key={user} style={{
                 padding: '8px',
                 backgroundColor: getUserColor(user),
-                borderRadius: '5px',
+                border:"1.5px solid #994949ff",
+                borderRadius:"12.5px",
                 marginBottom: '6px'
               }}>
                 {user}
@@ -86,9 +88,11 @@ const Chat = ({ socket, username, room }) => {
           </ul>
         </CardContent>
       </Card>
-      <Card fluid style={{ flex: 1, display: 'flex', flexDirection: 'column', height: '100%' }}>
+
+      <Card fluid style={{ flex: 1, display: 'flex', flexDirection: 'column', height: '100%', textAlign:"center", justifyContent: 'center', backgroundColor:"#EBE4E4", border:"1.5px solid #994949ff", borderRadius:"12.5px" }}>
         <CardContent style={{ flex: '0 0 auto', paddingBottom: 10 }}>
           <b>Chat en vivo | Sala: {room} | Usuario: {username}</b>
+            <Divider />
         </CardContent>
         <div style={{
           flex: 1,
@@ -111,7 +115,9 @@ const Chat = ({ socket, username, room }) => {
                 backgroundColor: getUserColor(item.author),
                 maxWidth: '60%',
                 padding: '12px 20px',
-                borderRadius: '8px',
+                
+                border:"1.5px solid #994949ff",
+                borderRadius:"12.5px",
                 boxShadow: "0 1px 4px rgba(0,0,0,0.04)",
                 color: '#222'
               }}>
@@ -132,17 +138,33 @@ const Chat = ({ socket, username, room }) => {
           <Form>
             <FormField>
               <Input
+                style={{
+                  border: "1.5px solid #994949ff",
+                  borderRadius: "12.5px",
+                  backgroundColor: "#E0D3D3"
+                }}
+                input={{
+                  style: {
+                    backgroundColor: "#E0D3D3",
+                    borderRadius: "12.5px"  // aquí defines el fondo del input real
+                  }
+                }}
                 action={{
                   color: 'teal',
                   labelPosition: 'right',
                   icon: 'send',
                   content: 'Enviar',
-                  onClick: sendMessage
+                  onClick: sendMessage,
+                  style: {
+                    borderRadius: "12.5px",   
+                  }
                 }}
                 value={currentMessage}
                 type='text'
                 placeholder='Escribe tu mensaje...'
                 onChange={handleTyping}
+                
+                
               />
             </FormField>
           </Form>
