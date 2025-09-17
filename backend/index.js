@@ -53,6 +53,15 @@ io.on("connection", (socket) => {
         console.log(`Mensaje en sala ${data.room}: ${data.author}: ${data.message}`);
     });
 
+    // --- Eventos para "escribiendo" ---
+    socket.on("typing", (room) => {
+        socket.to(room).emit("typing", socket.username);
+    });
+
+    socket.on("stop_typing", (room) => {
+        socket.to(room).emit("stop_typing", socket.username);
+    });
+
 
     socket.on("disconnect", () => {
         const { room, username} = socket
