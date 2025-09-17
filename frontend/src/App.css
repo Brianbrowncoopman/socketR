@@ -9,14 +9,59 @@ html, body, #root {
   height: 100%;
   display: flex;
   flex-direction: column;
+  min-height: 100vh; /* para asegurar que siempre ocupa toda pantalla */
 }
 
-
-
-/* Para escritorio (por defecto) */
-.ui.fluid.container {
+/* Contenedor principal para layout con footer fijo */
+.app-container {
+  display: flex;
+  flex-direction: column;
   height: 100vh;
+}
+
+.content {
+  flex: 1 1 auto; /* ocupa todo el espacio entre header y footer */
+  overflow-y: auto;
+}
+
+/* Footer fijo */
+.footer {
+  flex-shrink: 0; /* no se encoge */
+  height: 80px;
+  background-color: #FFF;
+  border-top: 1.5px solid #994949ff;
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+}
+
+/* Layout de columnas para escritorio */
+.ui.fluid.container {
   display: flex;
   flex-direction: row;
+  height: 100vh;
 }
 
+/* Responsive: columnas apiladas para móviles */
+@media (max-width: 700px) {
+  .ui.fluid.container {
+    flex-direction: column !important;
+    height: 100vh !important;
+    align-items: stretch !important;
+  }
+  .ui.card,
+  .ui.fluid.card {
+    width: 100% !important;
+    min-width: 0 !important;
+    margin: 0 0 8px 0 !important;
+  }
+  .ui.card .content {
+    font-size: 1em !important;
+  }
+  /* Input de mensajes y botones ocupan todo el ancho */
+  .ui.card .extra.content,
+  .ui.card .extra {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+}
