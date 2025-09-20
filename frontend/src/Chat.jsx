@@ -7,11 +7,23 @@ const Chat = ({ socket, username, room }) => {
   const [users, setUsers] = useState([]);
   const [typingUsers, setTypingUsers] = useState([]);
   const [imagePreview, setImagePreview] = useState(null);
-  const [isRecording, setIsRecording] = useState(false);
+
+  // Nueva lógica de grabación
+  const [recordStatus, setRecordStatus] = useState("idle"); // "idle", "recording", "stopped"
+  const [audioBlob, setAudioBlob] = useState(null);
+
   const typingTimeoutRef = useRef(null);
   const messagesEndRef = useRef(null);
   const mediaRecorderRef = useRef(null);
   const fileInputRef = useRef(null);
+
+  const buttonStyle = {
+  minWidth: 44,
+  minHeight: 44,
+  width: 44,
+  height: 44,
+  padding: 0
+};
 
   const pastelColors = ["#FADBD8", "#D6EAF8", "#D5F5E3", "#FCF3CF", "#E8DAEF", "#F9E79F", "#FDEBD0"];
 
@@ -74,6 +86,8 @@ const Chat = ({ socket, username, room }) => {
     }
   };
 
+  // === Lógica de grabación multi-estado ===
+
   const startRecording = async () => {
     if (!navigator.mediaDevices) {
       alert("Tu navegador no soporta grabación de audio.");
@@ -83,19 +97,15 @@ const Chat = ({ socket, username, room }) => {
     const mediaRecorder = new MediaRecorder(stream);
     mediaRecorderRef.current = mediaRecorder;
     mediaRecorder.start();
-    setIsRecording(true);
+    setRecordStatus("recording");
     const chunks = [];
 
     mediaRecorder.ondataavailable = e => chunks.push(e.data);
 
     mediaRecorder.onstop = () => {
-      const audioBlob = new Blob(chunks, { type: 'audio/webm' });
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        sendAudio(reader.result);
-      };
-      reader.readAsDataURL(audioBlob);
-      setIsRecording(false);
+      const blob = new Blob(chunks, { type: 'audio/webm' });
+      setAudioBlob(blob);
+      setRecordStatus("stopped");
     };
   };
 
@@ -104,19 +114,22 @@ const Chat = ({ socket, username, room }) => {
     mediaRecorderRef.current = null;
   };
 
-  const toggleRecording = () => {
-    if (isRecording) stopRecording();
-    else startRecording();
-  };
-
-  const sendAudio = (audioBase64) => {
-    socket.emit("send_message", {
-      room,
-      author: username,
-      messageType: "audio",
-      message: audioBase64,
-      time: new Date().toLocaleTimeString().slice(0, 5)
-    });
+  const sendAudio = () => {
+    if (audioBlob) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        socket.emit("send_message", {
+          room,
+          author: username,
+          messageType: "audio",
+          message: reader.result,
+          time: new Date().toLocaleTimeString().slice(0, 5)
+        });
+        setAudioBlob(null);
+        setRecordStatus("idle");
+      };
+      reader.readAsDataURL(audioBlob);
+    }
   };
 
   const openFileDialog = () => {
@@ -271,15 +284,44 @@ const Chat = ({ socket, username, room }) => {
           </div>
         )}
 
+        {/* Entrada de mensajes y controles */}
         <CardContent extra style={{ flex: '0 0 auto' }}>
           <Form>
-            <FormField style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 0 }}>
-              <Button
-                icon={isRecording ? "stop" : "microphone"}
-                color={isRecording ? "red" : "blue"}
-                onClick={() => isRecording ? stopRecording() : startRecording()}
-              />
-              <Button icon="image" color="purple" onClick={() => fileInputRef.current.click()} />
+            <FormField style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 0, marginLeft:'10px', marginRight:'10px' }}>
+              {/* Botón de grabación multi-estado */}
+              {recordStatus === "idle" && (
+                <Button
+                  icon="microphone"
+                  color="blue"
+                  onClick={startRecording}
+                  style={buttonStyle}
+                  content="Grabar"
+                />
+              )}
+              {recordStatus === "recording" && (
+                <Button
+                  icon="stop"
+                  color="yellow"
+                  onClick={stopRecording}
+                  style={buttonStyle}
+                  content="Detener"
+                />
+              )}
+              {recordStatus === "stopped" && (
+                <Button
+                  icon="send"
+                  color="red"
+                  onClick={sendAudio}
+                  style={buttonStyle}
+                  content="Enviar"
+                />
+              )}
+              {/* Botón de imagen */}
+              <Button 
+                icon="image" 
+                color="purple"
+                onClick={openFileDialog} 
+                style={buttonStyle} />
               <input
                 ref={fileInputRef}
                 id="image-upload"
@@ -288,6 +330,7 @@ const Chat = ({ socket, username, room }) => {
                 onChange={handleImageChange}
                 style={{ display: 'none' }}
               />
+              {/* Input de mensaje de texto */}
               <Input
                 style={{
                   border: "1.5px solid #994949ff",
@@ -305,15 +348,18 @@ const Chat = ({ socket, username, room }) => {
                   labelPosition: 'right',
                   icon: 'send',
                   content: 'Enviar',
+                  
                   onClick: sendMessage,
                   style: {
                     borderRadius: "12.5px",
+                    
                   }
                 }}
                 value={currentMessage}
                 type='text'
                 placeholder='Escribe tu mensaje...'
                 onChange={handleTyping}
+                
               />
             </FormField>
           </Form>
@@ -324,6 +370,7 @@ const Chat = ({ socket, username, room }) => {
 };
 
 export default Chat;
+
 
 
 
